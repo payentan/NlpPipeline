@@ -3,6 +3,13 @@ from pyhanlp import *
 from domain.persist import *
 import datetime
 
+def hanlp_segment_persist(terms):
+    for term in terms:
+        seg = Segment()
+        seg.seq_id = 123
+        (seg.word, seg.nature, seg.offset) = (term.word, str(term.nature), term.offset)
+        seg.save()
+
 @pytest.fixture
 def hanlp_crf(request):
     tid = request.config.getoption('tid')
@@ -10,7 +17,12 @@ def hanlp_crf(request):
     seg.enableOffset(True)
     text = Text.objects(id=tid)
     for t in text:
-        return seg.seg(t.content)
+        terms = seg.seg(t.content)
+        def finalize():
+            for term in terms:
+                hanlp_segment_persist(terms) 
+        request.addfinalizer(finalize)
+        return terms
 
 class TestSegment(object):
     def test_hanlp_crf(self, hanlp_crf):
