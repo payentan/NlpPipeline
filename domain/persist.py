@@ -3,23 +3,30 @@ import datetime
 
 connect('nlppipeline')
 
-class Node(Document):
-    parents = StringField(required=True)
+class NodePreviousCol(Document):
+    meta = {'collection': 'node_previus'}
+    previousId = StringField(require=True)
+    nodeId = StringField(require=True)
+
+class NodeCol(Document):
+    meta = {'collection': 'node'}
     software = StringField(required=True)
     algorithm = StringField(required=True)
-    parameter = StringField()
-    result = StringField(required=True)
+    parameters = StringField()
+    result = StringField(require=True)
     timestamp = DateTimeField(default=datetime.datetime.now)
 
-class Text(Document):
+class TextCol(Document):
+    meta = {'collection': 'text'}
     title = StringField()
     content = StringField(required=True)
     source = StringField()
     author = StringField()
     timestamp = DateTimeField(default=datetime.datetime.now)
 
-class Segment(Document):
-    seq_id = IntField(required=True)
+class SegmentCol(Document):
+    meta = {'collection': 'segment'}
+    seqId = IntField(required=True)
     word = StringField(required=True)
     nature = StringField(required=True)
     offset = IntField()
