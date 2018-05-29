@@ -5,7 +5,6 @@ import datetime
 import json
 
 def hanlp_segment_persist(tid, software, algorithm, parameters, terms):
-    print('hanlp_segment_persist')
     node = NodeCol()
     node.software = software
     node.algorithm = algorithm
@@ -18,15 +17,15 @@ def hanlp_segment_persist(tid, software, algorithm, parameters, terms):
         seg.seqId = seqId
         seqId = seqId + 1
         (seg.word, seg.nature, seg.offset) = (term.word, str(term.nature), term.offset)
-        seg_id = seg.save()
-        term_list.append(str(seg_id))
+        seg.save()
+        term_list.append(str(seg.id))
 
     node.result = json.dumps({'segment' : term_list })
-    node_id = str(node.save())
+    node.save()
 
     nodePrev = NodePreviousCol()
     nodePrev.previousId = tid
-    nodePrev.nodeId = node_id
+    nodePrev.nodeId = str(node.id)
     nodePrev.save()
 
 @pytest.fixture
