@@ -1,4 +1,5 @@
 import json
+import os
 from domain.persist import *
 
 class Node():
@@ -11,13 +12,16 @@ class Node():
 
 class NodeText():
     NAME = 'text'
-    def __init__(self, id):
+    def __init__(self, id=None):
+        if id==None:
+            return
+
         node_list = NodeCol.objects(id=id)
         assert node_list.count() == 1
         n = node_list.first()
         self.software = n.software
         self.algorithm = n.algorithm
-        self.parameters =  n.parameters
+        self.parameters =  n.parameters 
         for tid in json.loads(n.result)[self.NAME]:
             text = TextCol.objects(id=tid)
             assert text.count() == 1
@@ -29,6 +33,30 @@ class NodeText():
                 self.timestamp = t.timestamp
                 break
             break
+
+    def import_text(self, text):
+        assert len(text) > 0
+        t = TextCol()
+        t.content = text
+        t.save()
+
+        n = NodeCol()
+        n.software = n.algorithm = 'input'
+        n.parameters = '{}'
+        n.result = json.dumps({self.NAME: [str(t.id)]})
+        n.save()
+
+    def import_file(self, file_path):
+        assert os.path.exists(file_path)
+        t = TextCol()
+        t.content = open(file_path).read()
+        t.save()
+
+        n = NodeCol()
+        n.software = n.algorithm = 'input'
+        n.parameters = '{}'
+        n.result = json.dumps({self.NAME: [str(t.id)]})
+        n.save()
 
 class NodeSegment():
     NAME = 'segment'
