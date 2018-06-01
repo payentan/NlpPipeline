@@ -9,7 +9,29 @@ class Node():
         self.parameters =  parameters
         self.result = result
 
+class NodeText():
+    NAME = 'text'
+    def __init__(self, id):
+        node_list = NodeCol.objects(id=id)
+        assert node_list.count() == 1
+        n = node_list.first()
+        self.software = n.software
+        self.algorithm = n.algorithm
+        self.parameters =  n.parameters
+        for tid in json.loads(n.result)[self.NAME]:
+            text = TextCol.objects(id=tid)
+            assert text.count() == 1
+            for t in text:
+                self.title = t.title
+                self.content = t.content
+                self.source = t.source
+                self.author = t.author
+                self.timestamp = t.timestamp
+                break
+            break
+
 class NodeSegment():
+    NAME = 'segment'
     def __init__(self, prev_node_list, software, algorithm, parameters, result, conv_term):
         self.prev_node_list = prev_node_list
         self.software = software
