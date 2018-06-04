@@ -1,12 +1,11 @@
 import pytest
-from segmentHanlp import *
-from segmentJieba import *
+from hanlp_util import *
+from jieba_util import *
+from spacy_util import *
 
 class TestSegment(object):
-    def test_seg(self, hanlp_crf):
-        #for term in jieba_pseg:
-        #    print('{}\t{}\t'.format(term.word, term.flag)) 
+    def test_seg(self, spacy_std):
         pass
-
+        
 if __name__=='__main__':
     pytest.main()
