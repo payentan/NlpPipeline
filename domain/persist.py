@@ -20,6 +20,7 @@ class TextCol(Document):
     meta = {'collection': 'text'}
     title = StringField()
     content = StringField(required=True)
+    lang = StringField()
     source = StringField()
     author = StringField()
     timestamp = DateTimeField(default=datetime.datetime.now)
@@ -30,4 +31,15 @@ class SegmentCol(Document):
     word = StringField(required=True)
     nature = StringField(required=True)
     offset = IntField()
+    timestamp = DateTimeField(default=datetime.datetime.now)
+
+class DependencyCol(Document):
+    meta = {'collection': 'dependency'}
+    seqId = IntField(required=True)
+    word = StringField(required=True)
+    lemma = StringField()
+    pos = StringField()
+    tag = StringField()
+    dep = IntField()
+    deprel = StringField()
     timestamp = DateTimeField(default=datetime.datetime.now)
