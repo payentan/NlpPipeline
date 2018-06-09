@@ -17,7 +17,7 @@ def hanlp_crf(request):
         terms = seg.seg(t.content)
         request.addfinalizer(
             lambda :
-            NodeSegment(tid, 'hanlp', 'cfg', {}, terms,
+            NodeSegment(tid, 'hanlp', 'crf', {}, terms,
                 lambda t: (t.word, str(t.nature), t.offset)
                 )
         )
