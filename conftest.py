@@ -1,5 +1,5 @@
 import pytest
-from domain.persist import *
+from domain.dao import NlpContext
 
 connect('nlppipeline')
 
@@ -9,3 +9,7 @@ def pytest_addoption(parser):
     parser.addoption('--text', action='store', default='', help='text content')
 
     parser.addoption('--file', action='store', default='', help='text file')
+
+@pytest.fixture(scope="session")
+def nlp_ctx():
+    return NlpContext()

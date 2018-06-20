@@ -10,6 +10,7 @@ class NodePreviousCol(Document):
 
 class NodeCol(Document):
     meta = {'collection': 'node'}
+    worker = StringField(required=True)
     software = StringField(required=True)
     algorithm = StringField(required=True)
     parameters = StringField()
@@ -43,3 +44,10 @@ class DependencyCol(Document):
     dep = IntField()
     deprel = StringField()
     timestamp = DateTimeField(default=datetime.datetime.now)
+
+class EmbeddngCol(Document):
+    meta = {'collection': 'embedding'}
+    preModel = StringField()
+    texts = StringField()
+    model = StringField()
+    

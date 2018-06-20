@@ -43,7 +43,7 @@ class NodeText():
         n = NodeCol()
         n.software = n.algorithm = 'input'
         n.parameters = '{}'
-        n.result = json.dumps({self.NAME: [str(t.id)]})
+        n.result = str(t.id)
         n.save()
 
     def import_file(self, file_path):
@@ -55,7 +55,7 @@ class NodeText():
         n = NodeCol()
         n.software = n.algorithm = 'input'
         n.parameters = '{}'
-        n.result = json.dumps({self.NAME: [str(t.id)]})
+        n.result = str(t.id)
         n.save()
 
 class NodeSegment():
@@ -68,6 +68,7 @@ class NodeSegment():
         self.result = result
 
         node = NodeCol()
+        node.worker = self.NAME
         node.software = software
         node.algorithm = algorithm
         node.parameters = json.dumps(parameters)
@@ -82,7 +83,7 @@ class NodeSegment():
             seg.save()
             term_list.append(str(seg.id))
 
-        node.result = json.dumps({'segment' : term_list })
+        node.result = json.dumps({term_list})
         node.save()
 
         nodePrev = NodePreviousCol()
@@ -101,6 +102,7 @@ class NodeDependency():
         self.result = result
 
         node = NodeCol()
+        node.worker = self.NAME
         node.software = software
         node.algorithm = algorithm
         node.parameters = json.dumps(parameters)
@@ -115,10 +117,31 @@ class NodeDependency():
             dep.save()
             term_list.append(str(dep.id))
 
-        node.result = json.dumps({'dependency' : term_list })
+        node.result = json.dumps({term_list})
         node.save()
 
         nodePrev = NodePreviousCol()
         nodePrev.previousId = prev_node_list
         nodePrev.nodeId = str(node.id)
         nodePrev.save()
+
+class NodeEmbedding():
+    NAME = 'embedding'
+    def __init__(self, prev_node_list, software, algorithm, parameters, model, preModel=''):
+
+        emb = EmbeddngCol()
+        emb.model = model
+        emb.preModel = preModel
+        emb.save()
+
+        node = NodeCol()
+        node.worker = self.NAME
+        node.software = software
+        node.algorithm = algorithm
+        node.parameters = json.dumps(parameters)
+        node.result = str(emb.id)
+        node.save()
+
+class NlpContext():
+    def __init__(self):
+        pass
