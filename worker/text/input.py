@@ -3,12 +3,14 @@ import pytest
 from domain.dao import *
 
 @pytest.fixture
-def text_input(request):
+def text_input(request, nlp_ctx):
     t = request.config.getoption('text')
     f = request.config.getoption('file')
     
-    node = NodeText()
+    ctx = nlp_ctx
     if len(t) > 0:
-        node.import_text(t)
+        ctx.text.import_text(t)
     elif len(f) > 0:
-        node.import_file(f)
+        ctx.text.import_file(f)
+    else:
+        print('Please specify --file or --text option')

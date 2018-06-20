@@ -12,10 +12,10 @@ class Node():
 
 class NodeText():
     NAME = 'text'
-    def __init__(self, id=None):
-        if id==None:
-            return
+    def __init__(self):
+        pass
 
+    def load(self, id):
         node_list = NodeCol.objects(id=id)
         assert node_list.count() == 1
         n = node_list.first()
@@ -37,30 +37,38 @@ class NodeText():
     def import_text(self, text):
         assert len(text) > 0
         t = TextCol()
-        t.content = text
+        self.content = t.content = text
+        self.title = self.source = self.author = ''
         t.save()
 
         n = NodeCol()
-        n.software = n.algorithm = 'input'
-        n.parameters = '{}'
-        n.result = str(t.id)
+        n.worker = self.NAME
+        self.software = self.algorithm = n.software = n.algorithm = 'input'
+        self.parameters = n.parameters = '{}'
+        self.result = n.result = str(t.id)
+        
         n.save()
 
     def import_file(self, file_path):
         assert os.path.exists(file_path)
         t = TextCol()
-        t.content = open(file_path).read()
+        self.content = t.content = open(file_path).read()
+        self.title = self.source = self.author = ''
         t.save()
 
         n = NodeCol()
-        n.software = n.algorithm = 'input'
-        n.parameters = '{}'
-        n.result = str(t.id)
+        n.worker = self.NAME
+        self.software = self.algorithm = n.software = n.algorithm = 'input'
+        self.parameters = n.parameters = '{}'
+        self.result = n.result = str(t.id)
         n.save()
 
 class NodeSegment():
     NAME = 'segment'
-    def __init__(self, prev_node_list, software, algorithm, parameters, result, conv_term):
+    def __init__(self):
+        pass 
+    def save(self, prev_node_list=None, software=None, algorithm=None, 
+                parameters=None, result=None, conv_term=None):
         self.prev_node_list = prev_node_list
         self.software = software
         self.algorithm = algorithm
@@ -94,7 +102,11 @@ class NodeSegment():
 
 class NodeDependency():
     NAME = 'dependency'
-    def __init__(self, prev_node_list, software, algorithm, parameters, result, conv_term):
+    def __init__(self):
+        pass
+
+    def save(self, prev_node_list=None, software=None, algorithm=None, 
+                parameters=None, result=None, conv_term=None):
         self.prev_node_list = prev_node_list
         self.software = software
         self.algorithm = algorithm
@@ -127,7 +139,11 @@ class NodeDependency():
 
 class NodeEmbedding():
     NAME = 'embedding'
-    def __init__(self, prev_node_list, software, algorithm, parameters, model, preModel=''):
+    def __init__(self):
+        pass
+
+    def save(self, prev_node_list=None, software=None, algorithm=None, 
+                parameters=None, model=None, preModel=''):
 
         emb = EmbeddngCol()
         emb.model = model
@@ -144,4 +160,7 @@ class NodeEmbedding():
 
 class NlpContext():
     def __init__(self):
-        pass
+        self.text = NodeText()
+        self.segment = NodeSegment()
+        self.dependency = NodeDependency()
+        self.embedding = NodeEmbedding()
