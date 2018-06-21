@@ -2,37 +2,115 @@ import json
 import os
 from domain.persist import *
 
-class Node():
-    def __init__(self, prev_node_list, software, algorithm, parameters, result):
-        self.prev_node_list = prev_node_list
-        self.software = software
-        self.algorithm = algorithm
-        self.parameters =  parameters
-        self.result = result
+class Node(object):
+    def __init__(self):
+        pass
 
-class NodeText():
+    @property
+    def prev_node_list(self):
+        return self._prev_node_list
+
+    @prev_node_list.setter
+    def prev_node_list(self, value):
+        self._prev_node_list = value
+
+    @property
+    def software(self):
+        return self._software
+
+    @software.setter
+    def software(self, value):
+        self._software = value
+    
+    @property
+    def algorithm(self):
+        return self._algorithm
+
+    @algorithm.setter
+    def algorithm(self, value):
+        self._algorithm = value
+    
+    @property
+    def parameters(self):
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, value):
+        self._parameters = value
+
+    @property
+    def result(self):
+        return self._result
+
+    @result.setter
+    def result(self, value):
+        self._result = value
+
+class NodeText(Node):
     NAME = 'text'
     def __init__(self):
         pass
 
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+    
+    @property
+    def content(self):
+        return self._content
+
+    @content.setter
+    def content(self, value):
+        self._content = value
+    
+    @property
+    def source(self):
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        self._source = value
+
+    @property
+    def author(self):
+        return self._author
+    
+    @author.setter
+    def author(self, value):
+        self._author = value
+    
+    @property
+    def timestamp(self):
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, value):
+        self._timestamp = value
+
     def load(self, id):
         node_list = NodeCol.objects(id=id)
         assert node_list.count() == 1
+
         n = node_list.first()
         self.software = n.software
         self.algorithm = n.algorithm
         self.parameters =  n.parameters 
-        for tid in json.loads(n.result)[self.NAME]:
-            text = TextCol.objects(id=tid)
-            assert text.count() == 1
-            for t in text:
-                self.title = t.title
-                self.content = t.content
-                self.source = t.source
-                self.author = t.author
-                self.timestamp = t.timestamp
-                break
-            break
+        tid = n.result
+        self._load(tid)
+
+    def _load(self, tid):
+        text = TextCol.objects(id=tid)
+        assert text.count() == 1
+        t = text.first()
+        self.title = t.title
+        self.content = t.content
+        self.source = t.source
+        self.author = t.author
+        self.timestamp = t.timestamp
 
     def import_text(self, text):
         assert len(text) > 0
@@ -67,6 +145,7 @@ class NodeSegment():
     NAME = 'segment'
     def __init__(self):
         pass 
+
     def save(self, prev_node_list=None, software=None, algorithm=None, 
                 parameters=None, result=None, conv_term=None):
         self.prev_node_list = prev_node_list
@@ -91,7 +170,7 @@ class NodeSegment():
             seg.save()
             term_list.append(str(seg.id))
 
-        node.result = json.dumps({term_list})
+        node.result = " ".join(term_list)
         node.save()
 
         nodePrev = NodePreviousCol()

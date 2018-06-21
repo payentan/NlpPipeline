@@ -9,7 +9,7 @@ from domain.persist import *
 from domain.dao import *
 
 @pytest.fixture
-def jieba_pseg(request):
+def jieba_pseg(request, nlp_ctx):
     tid = request.config.getoption('tid')
     text = TextCol.objects(id=tid)
     

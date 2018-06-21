@@ -4,7 +4,7 @@ import spacy
 from domain.dao import *
 
 @pytest.fixture
-def spacy_std(request):
+def spacy_std(request, nlp_ctx):
     tid = request.config.getoption('tid')
     text = TextCol.objects(id=tid)
     
@@ -12,7 +12,7 @@ def spacy_std(request):
 
     for t in text:
 
-        doc = nlp('Apple is looking at buying U.K. startup for $1 billion')
+        doc = nlp(t.content)
 
         for token in doc:
             print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
