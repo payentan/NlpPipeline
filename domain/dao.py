@@ -141,7 +141,7 @@ class NodeText(Node):
         self.result = n.result = str(t.id)
         n.save()
 
-class NodeSegment():
+class NodeSegment(Node):
     NAME = 'segment'
     def __init__(self):
         pass 
@@ -178,8 +178,12 @@ class NodeSegment():
         nodePrev.nodeId = str(node.id)
         nodePrev.save()
 
+        print("")
+        print("prev", prev_node_list)
+        print("node", node.id)
+        print(self.NAME, node.result)
 
-class NodeDependency():
+class NodeDependency(Node):
     NAME = 'dependency'
     def __init__(self):
         pass
@@ -197,7 +201,7 @@ class NodeDependency():
         node.software = software
         node.algorithm = algorithm
         node.parameters = json.dumps(parameters)
-        term_list = []
+        id_list = []
 
         seqId = 0
         for term in result:
@@ -206,15 +210,20 @@ class NodeDependency():
             seqId += 1
             (dep.word, dep.lemma, dep.pos, dep.tag, dep.dep, dep.deprel) = conv_term(term)
             dep.save()
-            term_list.append(str(dep.id))
+            id_list.append(str(dep.id))
 
-        node.result = json.dumps({term_list})
+        node.result = " ".join(id_list)
         node.save()
 
         nodePrev = NodePreviousCol()
         nodePrev.previousId = prev_node_list
         nodePrev.nodeId = str(node.id)
         nodePrev.save()
+
+        print("")
+        print("prev", prev_node_list)
+        print("node", node.id)
+        print(self.NAME, node.result)
 
 class NodeEmbedding():
     NAME = 'embedding'
@@ -236,6 +245,16 @@ class NodeEmbedding():
         node.parameters = json.dumps(parameters)
         node.result = str(emb.id)
         node.save()
+
+        nodePrev = NodePreviousCol()
+        nodePrev.previousId = prev_node_list
+        nodePrev.nodeId = str(node.id)
+        nodePrev.save()
+
+        print("")
+        print("prev", prev_node_list)
+        print("node", node.id)
+        print(self.NAME, node.result)
 
 class NlpContext():
     def __init__(self):

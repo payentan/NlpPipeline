@@ -10,15 +10,15 @@ from domain.dao import *
 
 @pytest.fixture
 def jieba_pseg(request, nlp_ctx):
+    ctx = nlp_ctx
     tid = request.config.getoption('tid')
-    text = TextCol.objects(id=tid)
+    ctx.text.load(tid)
     
-    for t in text:
-        terms = jieba.posseg.cut(t.content)
-        request.addfinalizer(
-            lambda :
-            NodeSegment(tid, 'jieba', 'pseg', {}, terms,
-                lambda t: (t.word, str(t.flag), 0)
-                )
-        )
-        return terms
+    terms = jieba.posseg.cut(ctx.text.content)
+    request.addfinalizer(
+        lambda :
+        ctx.segment.save(tid, 'jieba', 'pseg', {}, terms,
+            lambda t: (t.word, str(t.flag), 0)
+            )
+    )
+    return terms

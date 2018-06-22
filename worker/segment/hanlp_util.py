@@ -13,8 +13,6 @@ def hanlp_crf(request, nlp_ctx):
     nlp_ctx.text.load(tid)
     seg = HanLP.newSegment('crf')
     seg.enableOffset(True)
-    #text = TextCol.objects(id=tid)
-    #for t in text:
     terms = seg.seg(nlp_ctx.text.content)
     request.addfinalizer(
         lambda :
