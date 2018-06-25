@@ -3,7 +3,7 @@ import pytest
 from domain.dao import *
 
 @pytest.fixture
-def text_import(request, nlp_ctx):
+def text_input(request, nlp_ctx):
     t = request.config.getoption('text')
     f = request.config.getoption('file')
     
@@ -16,5 +16,10 @@ def text_import(request, nlp_ctx):
         print('Please specify --file or --text option')
 
 @pytest.fixture
-def text_list(requst, nlp_ctx):
-    pass
+def text_list(request, nlp_ctx):
+    ctx = nlp_ctx
+    print("")
+    print("ID\t\t\t\tContent")
+    ctx.text.traverse(
+        lambda t: print(t.id+"\t"+t.content)
+    )

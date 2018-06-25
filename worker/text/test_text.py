@@ -6,7 +6,7 @@ class TestText(object):
     def test_list(self, text_list):
         pass
 
-    def test_text(self, text_import):
+    def test_input(self, text_input):
         pass
         
 if __name__=='__main__':

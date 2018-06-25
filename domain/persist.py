@@ -24,7 +24,7 @@ class TextCol(Document):
     lang = StringField()
     source = StringField()
     author = StringField()
-    timestamp = DateTimeField(default=datetime.datetime.now)
+    #timestamp = DateTimeField(default=datetime.datetime.now)
 
 class SegmentCol(Document):
     meta = {'collection': 'segment'}
@@ -32,7 +32,7 @@ class SegmentCol(Document):
     word = StringField(required=True)
     nature = StringField(required=True)
     offset = IntField()
-    timestamp = DateTimeField(default=datetime.datetime.now)
+    #timestamp = DateTimeField(default=datetime.datetime.now)
 
 class DependencyCol(Document):
     meta = {'collection': 'dependency'}
@@ -43,11 +43,12 @@ class DependencyCol(Document):
     tag = StringField()
     dep = IntField()
     deprel = StringField()
-    timestamp = DateTimeField(default=datetime.datetime.now)
+    #timestamp = DateTimeField(default=datetime.datetime.now)
 
 class EmbeddngCol(Document):
     meta = {'collection': 'embedding'}
     preModel = StringField()
     texts = StringField()
     model = StringField()
+    #timestamp = DateTimeField(default=datetime.datetime.now)
     

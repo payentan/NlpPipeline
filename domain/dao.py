@@ -7,6 +7,14 @@ class Node(object):
         pass
 
     @property
+    def id(self):
+        return self._id
+    
+    @id.setter
+    def id(self, value):
+        self._id = value
+
+    @property
     def prev_node_list(self):
         return self._prev_node_list
 
@@ -46,6 +54,14 @@ class Node(object):
     def result(self, value):
         self._result = value
 
+    @property
+    def timestamp(self):
+        return self._timestamp
+
+    @timestamp.setter
+    def timestamp(self, value):
+        self._timestamp = value
+
 class NodeText(Node):
     NAME = 'text'
     def __init__(self):
@@ -83,19 +99,12 @@ class NodeText(Node):
     def author(self, value):
         self._author = value
     
-    @property
-    def timestamp(self):
-        return self._timestamp
-
-    @timestamp.setter
-    def timestamp(self, value):
-        self._timestamp = value
-
     def load(self, id):
         node_list = NodeCol.objects(id=id)
         assert node_list.count() == 1
 
         n = node_list.first()
+        self.id = str(n.id)
         self.software = n.software
         self.algorithm = n.algorithm
         self.parameters =  n.parameters 
@@ -104,13 +113,14 @@ class NodeText(Node):
 
     def _load(self, tid):
         text = TextCol.objects(id=tid)
+        if text.count() != 1:
+            return 
         assert text.count() == 1
         t = text.first()
         self.title = t.title
         self.content = t.content
         self.source = t.source
         self.author = t.author
-        self.timestamp = t.timestamp
 
     def import_text(self, text):
         assert len(text) > 0
@@ -140,6 +150,12 @@ class NodeText(Node):
         self.parameters = n.parameters = '{}'
         self.result = n.result = str(t.id)
         n.save()
+
+    def traverse(self, func):
+        node_list = NodeCol.objects(worker=self.NAME)
+        for node in node_list:
+            self.load(node.id)
+            func(self)
 
 class NodeSegment(Node):
     NAME = 'segment'
@@ -225,7 +241,7 @@ class NodeDependency(Node):
         print("node", node.id)
         print(self.NAME, node.result)
 
-class NodeEmbedding():
+class NodeEmbedding(Node):
     NAME = 'embedding'
     def __init__(self):
         pass
