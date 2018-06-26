@@ -9,6 +9,7 @@ def nlpir_default(request, nlp_ctx):
     ctx.text.load(tid)
     pynlpir.open()
     terms = pynlpir.segment(ctx.text.content)
+    pynlpir.close()
     request.addfinalizer(
         lambda :
         ctx.segment.save(tid, 'nlpir', 'default', {}, terms,
