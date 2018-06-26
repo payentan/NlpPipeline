@@ -1,10 +1,5 @@
 import pytest
 from pyhanlp import *
-from domain.persist import *
-import datetime
-import json
-
-from domain.persist import *
 from domain.dao import *
 
 @pytest.fixture
